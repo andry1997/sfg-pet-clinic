@@ -38,6 +38,7 @@
                 <version>2.5.3</version>
                 <configuration>
                     <goals>install</goals>
+                    <!-- In questo modo lp snapshot version dei module sarà lo stesso che per la root -->
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                 </configuration>
             </plugin>

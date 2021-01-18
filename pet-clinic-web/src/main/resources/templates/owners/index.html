@@ -9,5 +9,19 @@
      usando altre strignhe non succede questo-->
     <h1 th:text="'List of Owners'">List of Owners........</h1>
 
+<table>
+    <tr>
+        <th>ID</th>
+        <th>First Name</th>
+        <th>Last name</th>
+    </tr>
+    <tr th:each="owner : ${owners}">
+        <!-- Stiamo estrapolando le informazioni contenute nella model inviata alla view dal controller e stiamo creando la pagina html con tali informazioni -->
+        <td th:text="${owner.id}">123</td>
+        <td th:text="${owner.firstName}">Jon</td>
+        <td th:text="${owner.lastName}">Doe</td>
+    </tr>
+</table>
+
 </body>
 </html>

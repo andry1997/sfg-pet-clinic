@@ -57,6 +57,10 @@ public abstract class AbstractMapService<T extends BaseEntity, ID extends Long> 
         map.entrySet().removeIf(entry -> entry.getValue().equals(object));
     }
 
+    /**
+     * Metodo necessario a definire un sistema "automatico" di defizione di ID incrementali
+     * @return
+     */
     private Long getNextId(){
         /**
          * Vogliamo che l'ID venga gestito automaticamente

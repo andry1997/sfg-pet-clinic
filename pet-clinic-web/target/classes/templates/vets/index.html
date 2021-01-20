@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'vets')}">
+<head>
+    <meta charset="UTF-8">
+    <title>List of Vets</title>
+</head>
+<body>
+    <h1 th:text="'List of Vets'">List of Vets.....</h1>
+
+    <table class="table table-striped">
+        <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last name</th>
+        </tr>
+        <tr th:each="vet : ${vets}">
+            <!-- Stiamo estrapolando le informazioni contenute nella model inviata alla view dal controller e stiamo creando la pagina html con tali informazioni -->
+            <td th:text="${vet.id}">123</td>
+            <td th:text="${vet.firstName}">Jon</td>
+            <td th:text="${vet.lastName}">Doe</td>
+        </tr>
+    </table>
+</body>
+</html>

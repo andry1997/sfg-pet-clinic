@@ -16,7 +16,7 @@ public class OwnerController {
     }
 
 
-    @RequestMapping({"/owners", "/owners/index", "/owners/index.html"})
+    @RequestMapping({"/owners", "/owners/index", "/owners/index.html", "/owners/find"})
     public String ownerList(Model model){
 
         model.addAttribute("owners", ownerService.findAll());

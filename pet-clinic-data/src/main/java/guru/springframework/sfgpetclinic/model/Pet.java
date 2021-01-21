@@ -23,7 +23,7 @@ public class Pet extends BaseEntity {
     @JoinColumn(name = "owner_id") //definisce come chiamare la colonna che conterrà la chiave esterna
     private Owner owner;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pet_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pet")
     private Set<Visit> visits = new HashSet<>();
 
     public String getName() {

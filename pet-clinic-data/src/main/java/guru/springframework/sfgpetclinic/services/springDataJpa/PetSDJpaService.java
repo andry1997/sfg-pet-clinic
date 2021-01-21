@@ -7,11 +7,13 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
+/**
+ * Created by jt on 8/5/18.
+ */
 @Service
-@Profile("spingdatajpa")
+@Profile("springdatajpa")
 public class PetSDJpaService implements PetService {
 
     private final PetRepository petRepository;
@@ -29,12 +31,7 @@ public class PetSDJpaService implements PetService {
 
     @Override
     public Pet findById(Long aLong) {
-        Optional<Pet> optionalPet =petRepository.findById(aLong);
-        if(optionalPet.isPresent()){
-            return  optionalPet.get();
-        }else {
-            return null;
-        }
+        return petRepository.findById(aLong).orElse(null);
     }
 
     @Override

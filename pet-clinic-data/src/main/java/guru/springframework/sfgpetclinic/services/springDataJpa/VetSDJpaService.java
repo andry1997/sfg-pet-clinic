@@ -7,16 +7,18 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
+/**
+ * Created by jt on 8/5/18.
+ */
 @Service
-@Profile("spingdatajpa")
-public class VetsSDJpaSEervice implements VetService {
+@Profile("springdatajpa")
+public class VetSDJpaService implements VetService {
 
     private final VetRepository vetRepository;
 
-    public VetsSDJpaSEervice(VetRepository vetRepository) {
+    public VetSDJpaService(VetRepository vetRepository) {
         this.vetRepository = vetRepository;
     }
 
@@ -29,13 +31,7 @@ public class VetsSDJpaSEervice implements VetService {
 
     @Override
     public Vet findById(Long aLong) {
-        Optional<Vet> optionalVet = vetRepository.findById(aLong);
-        if(optionalVet.isPresent()){
-            return optionalVet.get();
-        }else {
-            return null;
-        }
-
+        return vetRepository.findById(aLong).orElse(null);
     }
 
     @Override

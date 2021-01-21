@@ -2,11 +2,13 @@ package guru.springframework.sfgpetclinic.services.map;
 
 import guru.springframework.sfgpetclinic.model.Visit;
 import guru.springframework.sfgpetclinic.services.VisitService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
 @Service
+@Profile({"default", "map"})
 public class VisitServiceMap extends AbstractMapService<Visit, Long> implements VisitService {
 
 
@@ -28,7 +30,7 @@ public class VisitServiceMap extends AbstractMapService<Visit, Long> implements 
     @Override
     public Visit save(Visit object) {
         // verificare ce quell'animale sia presente oppure se questo ha un animale
-        if(object.getPet() == null || object.getPet().getOwner() == null || object.getId() == null){
+        if(object.getPet() == null || object.getPet().getOwner() == null || object.getPet().getOwner().getId() == null){
             throw new RuntimeException("Invalid visit");
         }else{
             return super.save(object);

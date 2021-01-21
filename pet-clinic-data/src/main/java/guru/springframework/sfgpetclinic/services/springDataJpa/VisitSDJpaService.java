@@ -7,11 +7,13 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
+/**
+ * Created by jt on 8/7/18.
+ */
 @Service
-@Profile("spingdatajpa")
+@Profile("springdatajpa")
 public class VisitSDJpaService implements VisitService {
 
     private final VisitRepository visitRepository;
@@ -29,12 +31,7 @@ public class VisitSDJpaService implements VisitService {
 
     @Override
     public Visit findById(Long aLong) {
-        Optional<Visit> optionalVisit = visitRepository.findById(aLong);
-        if(optionalVisit.isPresent()){
-            return  optionalVisit.get();
-        }else{
-            return null;
-        }
+        return visitRepository.findById(aLong).orElse(null);
     }
 
     @Override

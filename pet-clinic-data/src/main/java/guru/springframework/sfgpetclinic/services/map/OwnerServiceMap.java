@@ -47,7 +47,7 @@ public class OwnerServiceMap extends AbstractMapService<Owner, Long> implements 
                     // Se abbiamo assegnato al nostro owner un animale il cui
                     // tipo non è ancora stato aggiunto alla lista questo viene aggiunto
                     if(pet.getPetType() != null){
-                        // L'id viene esteso dalla classe BaseEntity
+                        // L'id attibute viene esteso dalla classe BaseEntity
                         if (pet.getPetType().getId() == null){
                             pet.setPetType(petTypeService.save(pet.getPetType()));
                         }
@@ -78,6 +78,10 @@ public class OwnerServiceMap extends AbstractMapService<Owner, Long> implements 
 
     @Override
     public Owner findByLastName(String lastName) {
-        return null;
+        return this.findAll()
+                .stream()
+                .filter(owner -> owner.getLastName().equalsIgnoreCase(lastName))
+                .findFirst()
+                .orElse(null);
     }
 }

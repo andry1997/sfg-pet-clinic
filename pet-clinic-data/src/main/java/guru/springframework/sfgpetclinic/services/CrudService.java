@@ -1,7 +1,5 @@
 package guru.springframework.sfgpetclinic.services;
 
-import org.springframework.stereotype.Service;
-
 import java.util.Set;
 
 /**
@@ -10,7 +8,6 @@ import java.util.Set;
  * @param <ID> fa riferimento il tipo di dato associato all'ID
  */
 
-@Service
 public interface CrudService<T, ID> {
 
     Set<T> findAll();

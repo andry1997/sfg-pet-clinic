@@ -25,6 +25,7 @@
         <java.version>11</java.version>
     </properties>
 
+
     <build>
         <plugins>
             <plugin>
@@ -42,6 +43,7 @@
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
 

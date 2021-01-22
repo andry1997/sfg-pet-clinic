@@ -119,16 +119,20 @@ public class DataLoader implements CommandLineRunner {
                                             // Definizione delle specilties e associazione di queste ai vari vet
 
         Specialty rediology = new Specialty();
-        rediology.setDescription("Radiolozia");
+        rediology.setDescription("Radiologia");
         Specialty savedRadiology = specialtyService.save(rediology);
 
         Specialty surgery = new Specialty();
         surgery.setDescription("Chirurgia");
         Specialty savedSurgery = specialtyService.save(surgery);
 
-        vet1.getSpecialties().add(savedRadiology);
+        vet1.getSpecialties().add(rediology);
+
         vet1.getSpecialties().add(savedSurgery);
         vet2.getSpecialties().add(savedRadiology);
+
+        System.out.println(rediology.getDescription());
+
 
                                             // Definizione delle Visite
 

@@ -21,45 +21,58 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class OwnersSDJpaServiceTest {
+class OwnerSDJpaServiceTest {
 
+    public static final String LAST_NAME = "Smith";
     @Mock
     OwnerRepository ownerRepository;
+
     @Mock
     PetRepository petRepository;
+
     @Mock
     PetTypeRepository petTypeRepository;
 
     @InjectMocks
-    OwnersSDJpaService ownersSDJpaService;
+    OwnersSDJpaService service;
 
-    Owner owner;
-    private final String nome = "Smith";
-
+    Owner returnOwner;
 
     @BeforeEach
     void setUp() {
-        owner = Owner.builder().id(1l).lastName(nome).build();
+        returnOwner = Owner.builder().id(1l).lastName(LAST_NAME).build();
+    }
+
+    @Test
+    void findByLastName() {
+        when(ownerRepository.findByLastName(any())).thenReturn(returnOwner);
+
+        Owner smith = service.findByLastName(LAST_NAME);
+
+        assertEquals(LAST_NAME, smith.getLastName());
+
+        verify(ownerRepository).findByLastName(any());
     }
 
     @Test
     void findAll() {
-        Set<Owner> ownerSet = new HashSet<>();
-        ownerSet.add(Owner.builder().id(1l).build());
-        ownerSet.add(Owner.builder().id(2l).build());
+        Set<Owner> returnOwnersSet = new HashSet<>();
+        returnOwnersSet.add(Owner.builder().id(1l).build());
+        returnOwnersSet.add(Owner.builder().id(2l).build());
 
-        when(ownerRepository.findAll()).thenReturn(ownerSet);
+        when(ownerRepository.findAll()).thenReturn(returnOwnersSet);
 
-        Set<Owner> owners = ownersSDJpaService.findAll();
+        Set<Owner> owners = service.findAll();
 
-        assertNull(owners);
+        assertNotNull(owners);
+        assertEquals(2, owners.size());
     }
 
     @Test
     void findById() {
-        when(ownerRepository.findById(anyLong())).thenReturn(Optional.of(owner));
+        when(ownerRepository.findById(anyLong())).thenReturn(Optional.of(returnOwner));
 
-        Owner owner = ownersSDJpaService.findById(1L);
+        Owner owner = service.findById(1L);
 
         assertNotNull(owner);
     }
@@ -68,7 +81,7 @@ class OwnersSDJpaServiceTest {
     void findByIdNotFound() {
         when(ownerRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        Owner owner = ownersSDJpaService.findById(1L);
+        Owner owner = service.findById(1L);
 
         assertNull(owner);
     }
@@ -78,9 +91,9 @@ class OwnersSDJpaServiceTest {
     void save() {
         Owner ownerToSave = Owner.builder().id(1L).build();
 
-        when(ownerRepository.save(any())).thenReturn(owner);
+        when(ownerRepository.save(any())).thenReturn(returnOwner);
 
-        Owner savedOwner = ownersSDJpaService.save(ownerToSave);
+        Owner savedOwner = service.save(ownerToSave);
 
         assertNotNull(savedOwner);
 
@@ -89,7 +102,7 @@ class OwnersSDJpaServiceTest {
 
     @Test
     void delete() {
-        ownersSDJpaService.delete(owner);
+        service.delete(returnOwner);
 
         //default is 1 times
         verify(ownerRepository, times(1)).delete(any());
@@ -97,19 +110,8 @@ class OwnersSDJpaServiceTest {
 
     @Test
     void deleteById() {
-        ownersSDJpaService.deleteById(1L);
+        service.deleteById(1L);
 
         verify(ownerRepository).deleteById(anyLong());
-    }
-
-    @Test
-    void findByLastName() {
-        when(ownerRepository.findByLastName(any())).thenReturn(owner);
-
-        Owner smith = ownersSDJpaService.findByLastName(nome);
-
-        assertEquals(nome, smith.getLastName());
-
-        verify(ownerRepository).findByLastName(any());
     }
 }

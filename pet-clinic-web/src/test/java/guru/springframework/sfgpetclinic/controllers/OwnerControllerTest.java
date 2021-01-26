@@ -11,11 +11,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -24,70 +26,81 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 class OwnerControllerTest {
 
-    @InjectMocks
-    OwnerController controller;
-
     @Mock
     OwnerService ownerService;
 
-    Set<Owner> ownerSet;
+    @InjectMocks
+    OwnerController controller;
 
-    // Oggetto utilizzato per i controller per effettuare i test delle interazioni con questi
+    Set<Owner> owners;
+
     MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
-        ownerSet = new HashSet<>();
-        ownerSet.add(Owner.builder().id(1l).build());
-        ownerSet.add(Owner.builder().id(2l).build());
+        owners = new HashSet<>();
+        owners.add(Owner.builder().id(1l).build());
+        owners.add(Owner.builder().id(2l).build());
 
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(controller)
+                .build();
     }
 
     @Test
-    void ownerList() throws Exception {
-        when(ownerService.findAll()).thenReturn(ownerSet);
-
-        // Questo si che quando viene richiesto quel URL lo stato della richiesta
-        // è OK, che la view che viene restituita ha quel nome e che la lista di
-        // owner contiene in questo caso 2 elementi.
-        mockMvc.perform(get("/owners"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("owners/index"))
-                .andExpect(model().attribute("owners", hasSize(2)));
-    }
-
-    @Test
-    void ownerListByIndex() throws Exception {
-        when(ownerService.findAll()).thenReturn(ownerSet);
-
-        // Questo si che quando viene richiesto quel URL lo stato della richiesta
-        // è OK, che la view che viene restituita ha quel nome e che la lista di
-        // owner contiene in questo caso 2 elementi.
-        mockMvc.perform(get("/owners/index"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("owners/index"))
-                .andExpect(model().attribute("owners", hasSize(2)));
-    }
-
-    @Test
-    void findOwner() throws Exception{
-
+    void findOwners() throws Exception {
         mockMvc.perform(get("/owners/find"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("error/index"));
+                .andExpect(view().name("owner/findOwners"))
+                .andExpect(model().attributeExists("owner"));
 
-        // non dovrebbe esserci alcuna richiesta fatta verso un oggeto di qusto tipo
         verifyZeroInteractions(ownerService);
     }
 
     @Test
-    void displayOwner() throws Exception{
-        when(ownerService.findById(any())).thenReturn(Owner.builder().id(1l).build());
+    void processFindFormReturnMany() throws Exception {
+        when(ownerService.findAllByLastNameLike(anyString()))
+                .thenReturn(Arrays.asList(Owner.builder().id(1l).build(),
+                        Owner.builder().id(2l).build()));
+
+        mockMvc.perform(get("/owners"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("owners/ownersList"))
+                .andExpect(model().attribute("selections", hasSize(2)));
+    }
+
+    @Test
+    void processFindFormReturnOne() throws Exception {
+        when(ownerService.findAllByLastNameLike(anyString())).thenReturn(Arrays.asList(Owner.builder().id(1l).build()));
+
+        mockMvc.perform(get("/owners"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/owners/1"));
+    }
+
+    @Test
+    void processFindFormEmptyReturnMany() throws Exception {
+        when(ownerService.findAllByLastNameLike(anyString()))
+                .thenReturn(Arrays.asList(Owner.builder().id(1l).build(),
+                        Owner.builder().id(2l).build()));
+
+        mockMvc.perform(get("/owners")
+                .param("lastName",""))
+                .andExpect(status().isOk())
+                .andExpect(view().name("owners/ownersList"))
+                .andExpect(model().attribute("selections", hasSize(2)));;
+    }
+
+    @Test
+    void displayOwner() throws Exception {
+        when(ownerService.findById(anyLong())).thenReturn(Owner.builder().id(1l).build());
 
         mockMvc.perform(get("/owners/123"))
                 .andExpect(status().isOk())
-                .andExpect((view().name("owners/ownerDetails")))
+                .andExpect(view().name("owners/ownerDetails"))
                 .andExpect(model().attribute("owner", hasProperty("id", is(1l))));
     }
+
+
+
 }

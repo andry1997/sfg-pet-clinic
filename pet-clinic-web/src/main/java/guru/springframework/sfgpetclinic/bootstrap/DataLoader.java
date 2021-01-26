@@ -92,9 +92,11 @@ public class DataLoader implements CommandLineRunner {
         PetType saveDogPetType = petTypeService.save(dog);
 
         PetType cat = new PetType();
-        dog.setName("Cat");
+        cat.setName("Cat");
         PetType saveCatPetType = petTypeService.save(cat);
 
+        System.out.println("gatto ::::: " + saveCatPetType.getName());
+        System.out.println("gatto ::::: " + petTypeService.findAll().size());
 
                                               // Definire una "relazione" simil-persistente tra i proprietari e i loro animali
                                               // Associazione degli animali creati ai rispettivi owner
